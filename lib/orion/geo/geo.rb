@@ -44,8 +44,7 @@ module Orion
           headers: { 'Content-Type' => 'application/json' }
           }
 
-      response = HTTParty.post(@url + action, options)
-      puts response.body
+      HTTParty.post(@url + action, options)
     end
 
     # type = type of data E.g: 'City'
@@ -76,13 +75,14 @@ module Orion
         headers: { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
       }
 
-      response = HTTParty.post(@url + action, options)
-      puts response.body
+      HTTParty.post(@url + action, options)
     end
 
     # type = type of data E.g: 'City'
     # id = id of the object
     def delete(type, id)
+      action = '/ngsi10/updateContext'
+
       options = {
         body: {
           contextElements: [
@@ -96,17 +96,15 @@ module Orion
         headers: { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
       }
 
-      response = HTTParty.post(@url + action, options)
-      puts response.body
+      HTTParty.post(@url + action, options)
     end
 
     # type_area = 'circle' || 'polygon'
     #   - polygon: array_point = ['lat, long','lat, long','lat, long'] ----- infinite number of points
-    #   - polygon: array_point = ['lat, long, radius'] ----- radius in meters
+    #   - polygon: array_point = [lat, long, radius] ----- radius in meters
     private
     def get_area(type_area, array_point)
       if type_area == 'circle'
-        array_point = array_point[0].split(',')
         area = {
             circle: {
                 centerLatitude: array_point[0],
@@ -117,16 +115,14 @@ module Orion
       else
         area = {
             polygon: {
-                vertices: [
-                    array_point.map{ |c|
-                      c = c.split(',')
-                      puts c
-                      {
-                          latitude: c[0],
-                          longitude: c[1]
-                      }
-                    }
-                ]
+                vertices:
+                array_point.map{ |c|
+                  c = c.split(',')
+                  {
+                      latitude: c[0],
+                      longitude: c[1]
+                  }
+                }
             }
         }
       end
