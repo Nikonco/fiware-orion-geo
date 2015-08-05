@@ -45,8 +45,7 @@ module Orion
           }
 
       response = HTTParty.post(@url + action, options)
-      # response = HTTParty.post('http://192.168.99.100:32769/ngsi10/updateContext', options)
-      puts response.body, response.code, response.message, response.headers.inspect
+      puts response.body
     end
 
     # type = type of data E.g: 'City'
@@ -78,12 +77,27 @@ module Orion
       }
 
       response = HTTParty.post(@url + action, options)
-      # response = HTTParty.post('http://192.168.99.100:32769/ngsi10/queryContext', options)
-      puts response.body, response.code, response.message, response.headers.inspect
+      puts response.body
     end
 
-    def delete(id)
-      
+    # type = type of data E.g: 'City'
+    # id = id of the object
+    def delete(type, id)
+      options = {
+        body: {
+          contextElements: [
+            {
+              type: type,
+              isPattern: "false",
+              id: id
+            }
+          ]
+        }.to_json,
+        headers: { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
+      }
+
+      response = HTTParty.post(@url + action, options)
+      puts response.body
     end
 
     # type_area = 'circle' || 'polygon'

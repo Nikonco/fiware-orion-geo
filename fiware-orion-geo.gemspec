@@ -10,5 +10,6 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://rubygems.org/gems/fiware-orion-geo'
   s.license     = 'MIT'
 
+  s.add_development_dependency 'rspec'
   s.add_runtime_dependency 'httparty', '~> 0'
 end

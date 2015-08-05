@@ -7,12 +7,14 @@ module Orion
 
       def load_config(orion_url)
         begin
-          filename = "#{Rails.root}/config/initializers/fiware_orion_config.rb"
+          filename = "/config/initializers/fiware_orion_config.rb"
+          # filename = "#{Rails.root}/config/initializers/fiware_orion_config.rb"
           if self.check_config_file(filename)
             require filename
-            @orion_url = (app_key.nil?) ? QQ_CONNECT_API_KEY : app_key
+            @orion_url = (orion_url.nil?) ? QQ_CONNECT_API_KEY : orion_url
           else
             @orion_url = orion_url
+            puts @orion_url
           end
           {
               orion_url: @orion_url,
