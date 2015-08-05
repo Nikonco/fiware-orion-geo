@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.description = "Gives you the possibility to simply interfear with Orion server (from Fiware) to insert and retreive data based on geolocalisation"
   s.authors     = ["Nikolaï POSNER"]
   s.email       = 'nikoposner@gmail.com'
-  s.files       = ["lib/fiware-orion-geo.rb","lib/orion/geo/geo.rb"]
+  s.files       = `git ls-files`.split($\)
   s.homepage    = 'http://rubygems.org/gems/fiware-orion-geo'
   s.license     = 'MIT'
 

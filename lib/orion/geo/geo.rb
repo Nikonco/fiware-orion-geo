@@ -4,10 +4,17 @@ require 'pp'
 module Orion
   class Geo
 
+    def initialize
+      config = Orion::Config::load_config('http://192.168.99.100:32769')
+      @url = config[:orion_url]
+    end
 
-
+    # type = type of data E.g: 'City'
+    # id = id of the element
+    # long = Longitude
+    # lat = latitude
     def push(type,id,long,lat)
-      action = '/v1/updateContext'
+      action = '/ngsi10/updateContext'
 
       options = {
           body: {
@@ -25,7 +32,7 @@ module Orion
                       {
                         name: "location",
                         type: "string",
-                        value: "WGS84"
+                        value: "WSG84"
                       }
                     ]
                   }
@@ -33,17 +40,83 @@ module Orion
               }
               ],
               updateAction: "APPEND"
-            },
+            }.to_json,
           headers: { 'Content-Type' => 'application/json' }
           }
 
-      response = HTTParty.post(ORION_GEO_URL + action, options)
+      response = HTTParty.post(@url + action, options)
+      # response = HTTParty.post('http://192.168.99.100:32769/ngsi10/updateContext', options)
       puts response.body, response.code, response.message, response.headers.inspect
     end
 
-    def pull(type,array_point)
-      puts "Note #{id} located on long #{long} and lat #{lat}"
+    # type = type of data E.g: 'City'
+    # type_area = 'circle' || 'polygon'
+    #   - polygon: array_point = ['lat, long','lat, long','lat, long'] ----- infinite number of points
+    #   - polygon: array_point = ['lat, long, radius'] ----- radius in meters
+    def pull(type, type_area, array_point)
+      action = '/ngsi10/queryContext'
+
+      options = {
+          body: {
+          entities: [
+            {
+              type: type,
+              isPattern: "true",
+              id: ".*"
+            }
+          ],
+          restriction: {
+            scopes: [
+              {
+                type: "FIWARE::Location",
+                value: get_area(type_area, array_point)
+              }
+            ]
+          }
+        }.to_json,
+        headers: { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
+      }
+
+      response = HTTParty.post(@url + action, options)
+      # response = HTTParty.post('http://192.168.99.100:32769/ngsi10/queryContext', options)
+      puts response.body, response.code, response.message, response.headers.inspect
     end
 
+    def delete(id)
+      
+    end
+
+    # type_area = 'circle' || 'polygon'
+    #   - polygon: array_point = ['lat, long','lat, long','lat, long'] ----- infinite number of points
+    #   - polygon: array_point = ['lat, long, radius'] ----- radius in meters
+    private
+    def get_area(type_area, array_point)
+      if type_area == 'circle'
+        array_point = array_point[0].split(',')
+        area = {
+            circle: {
+                centerLatitude: array_point[0],
+                centerLongitude: array_point[1],
+                radius: array_point[2]
+            }
+        }
+      else
+        area = {
+            polygon: {
+                vertices: [
+                    array_point.map{ |c|
+                      c = c.split(',')
+                      puts c
+                      {
+                          latitude: c[0],
+                          longitude: c[1]
+                      }
+                    }
+                ]
+            }
+        }
+      end
+      area
+    end
   end
 end
