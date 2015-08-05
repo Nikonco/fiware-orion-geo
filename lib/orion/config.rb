@@ -11,7 +11,7 @@ module Orion
           # filename = "#{Rails.root}/config/initializers/fiware_orion_config.rb"
           if self.check_config_file(filename)
             require filename
-            @orion_url = (orion_url.nil?) ? QQ_CONNECT_API_KEY : orion_url
+            @orion_url = (orion_url.nil?) ? ORION_SERVER_IP : orion_url
           else
             @orion_url = orion_url
             puts @orion_url

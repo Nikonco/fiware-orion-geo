@@ -50,7 +50,7 @@ module Orion
     # type = type of data E.g: 'City'
     # type_area = 'circle' || 'polygon'
     #   - polygon: array_point = ['lat, long','lat, long','lat, long'] ----- infinite number of points
-    #   - polygon: array_point = ['lat, long, radius'] ----- radius in meters
+    #   - circle: array_point = ['lat, long, radius'] ----- radius in meters
     def pull(type, type_area, array_point)
       action = '/ngsi10/queryContext'
 
