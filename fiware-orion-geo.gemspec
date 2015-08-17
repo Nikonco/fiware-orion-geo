@@ -1,13 +1,13 @@
 Gem::Specification.new do |s|
   s.name        = 'fiware-orion-geo'
-  s.version     = '0.0.1'
+  s.version     = '0.0.2'
   s.date        = '2014-08-03'
   s.summary     = "Interface for Orion server"
   s.description = "Gives you the possibility to simply interfear with Orion server (from Fiware) to insert and retreive data based on geolocalisation"
   s.authors     = ["Nikolaï POSNER"]
   s.email       = 'nikoposner@gmail.com'
   s.files       = `git ls-files`.split($\)
-  s.homepage    = 'http://rubygems.org/gems/fiware-orion-geo'
+  s.homepage    = 'https://github.com/NikoEEMI/fiware-orion-geo'
   s.license     = 'MIT'
 
   s.add_development_dependency 'rspec', '~> 0'
